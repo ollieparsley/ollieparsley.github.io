@@ -10,5 +10,7 @@ order: 4
 # MIT License
 ---
 
+Hey there!
 
-> **Note**: Add Markdown syntax content to file `_tabs/about.md` and it will show up on this page.
+I'm Ollie Parsley. By day I'm a software engineering manager and by night I dabble in side-projects.
+
