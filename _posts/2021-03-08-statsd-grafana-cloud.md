@@ -1,6 +1,6 @@
 ---
 title: Statsd + Prometheus on Grafana Cloud
-date: 2021-03-08 23:00:00 +/-0100
+date: 2021-03-08 21:30:00 +/-0100
 categories: [how-to]
 tags: [grafana,prometheus,statsd]
 ---
