@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en" mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="theme" content="Chirpy v2.7.0"><meta name="generator" content="Jekyll v4.1.1" /><meta property="og:title" content="Statsd + Prometheus on Grafana Cloud" /><meta name="author" content="Ollie Parsley" /><meta property="og:locale" content="en_US" /><meta name="description" content="All about myself, Ollie Parsley and how I dabble, develop and deploy." /><meta property="og:description" content="All about myself, Ollie Parsley and how I dabble, develop and deploy." /><link rel="canonical" href="https://ollieparsley.com/posts/statsd-grafana-cloud/" /><meta property="og:url" content="https://ollieparsley.com/posts/statsd-grafana-cloud/" /><meta property="og:site_name" content="Ollie Parsley" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-03-08T21:00:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Statsd + Prometheus on Grafana Cloud" /><meta name="twitter:site" content="@ollieparsley" /><meta name="twitter:creator" content="@Ollie Parsley" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"author":{"@type":"Person","name":"Ollie Parsley"},"description":"All about myself, Ollie Parsley and how I dabble, develop and deploy.","url":"https://ollieparsley.com/posts/statsd-grafana-cloud/","@type":"BlogPosting","headline":"Statsd + Prometheus on Grafana Cloud","dateModified":"2021-03-08T22:34:43+00:00","datePublished":"2021-03-08T21:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://ollieparsley.com/posts/statsd-grafana-cloud/"},"@context":"https://schema.org"}</script><title>Statsd + Prometheus on Grafana Cloud | Ollie Parsley</title><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon.png"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon-precomposed.png"><link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicons/android-icon-192x192.png"><link rel="manifest" href="/assets/img/favicons/manifest.json"><meta name='msapplication-config' content='/assets/img/favicons/browserconfig.xml'><meta name="msapplication-TileColor" content="#ffffff"><meta name="msapplication-TileImage" content="/assets/img/favicons/ms-icon-150x150.png"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="cdn.jsdelivr.net"><link rel="dns-prefetch" href="cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous"><link rel="preload" href="/assets/css/post.css" as="style"><link rel="stylesheet" href="/assets/css/post.css"><link rel="preload" as="style" href="/assets/css/lib/bootstrap-toc.min.css"><link rel="stylesheet" href="/assets/css/lib/bootstrap-toc.min.css" /> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="/assets/js/post.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column"><div id="nav-wrapper"><div id="profile-wrapper" class="d-flex flex-column"><div id="avatar" class="d-flex justify-content-center"> <a href="/" alt="avatar"> <img src="/assets/img/avatar.png" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="profile-text mt-3"><div class="site-title"> <a href="/">Ollie Parsley</a></div><div class="site-subtitle font-italic">Dabble - Develop - Deploy</div></div></div><ul class="nav flex-column"><li class="nav-item d-flex justify-content-center "> <a href="/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/categories/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/tags/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/archives/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item d-flex justify-content-center "> <a href="/tabs/about/" class="nav-link d-flex justify-content-center align-items-center w-100"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul></div><div class="sidebar-bottom d-flex flex-wrap justify-content-around mt-4"> <a href="https://github.com/ollieparsley" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href="https://twitter.com/ollieparsley" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['hello','ollieparsley.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Posts </a> </span> <span>Statsd + Prometheus on Grafana Cloud</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Statsd + Prometheus on Grafana Cloud</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Mon, Mar 8, 2021, 9:00 PM +0000" > Mar 8, 2021 <i class="unloaded">2021-03-08T21:00:00+00:00</i> </span> by <span class="author"> Ollie Parsley </span></div><div> <span> Updated <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Mon, Mar 8, 2021, 10:34 PM +0000" > Mar 8, 2021 <i class="unloaded">2021-03-08T22:34:43+00:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1148 words">6 min</span></div></div><div class="post-content"><div style="text-align:center;max-width:400px;margin:0 auto;margin-bottom:10px;"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="https://cdn.thenewstack.io/media/2021/01/cb356f21-screenshot-2021-01-11-124905-1024x536.png" /></div><p>On the 12th January 2021, <a href="https://grafana.com/blog/2021/01/12/the-new-grafana-cloud-the-only-composable-observability-stack-for-metrics-logs-and-traces-now-with-free-and-paid-plans-to-suit-every-use-case/?plcmt=footer">Grafana Labs announced</a> an updated version of Grafana Cloud. The most important part of the announcement for me was the fact that there is a new plan that’s actually free. Just to confirm, this is not an advert of paid promotion, I was genuinely excited about this!</p><p>As soon as I saw the announcement I got to work on updating my own metric use within my pet projects. I’ve pretty-much only used Statsd for metrics in my own projects, but I also use Prometheus in my day job.</p><h2 id="grafana-cloud-free-account-limitations">Grafana cloud free account limitations</h2><p>If you’re thinking about using Grafana Cloud for free then you should be aware of the <a href="https://grafana.com/get/">limitations of free accounts</a>.</p><ul><li>10,000 series for Prometheus or Graphite metrics<li>50 GB of logs<li>14 day retention for metrics and logs<li>Access for up to 3 team members</ul><h2 id="security-and-privacy-concerns">Security and privacy concerns</h2><p>The first thing that might cross your mind is questioning whether it is safe to put your metrics into the cloud. Well, I have a couple of thoughts on that.</p><ol><li><p><strong>Trust</strong> Obviously the first thing is that you need to have a level of trust with the place you’re sending metrics. For me, purely based on my interactions with the open-source Grafana and their Github issues.</p><li><p><strong>PII</strong> I would make sure to not send any personally identifiable information. I’d certainly not even do that if my metrics were stored on-premise or my own cluster.</p><li><p><strong>Authentication</strong> The transport for sending metrics must have both authentication and encryption</p></ol><p>Let’s take a look at what I discovered and see if that was enough to alleviate my concerns</p><h2 id="statsd-or-prometheus">Statsd or Prometheus</h2><p>One important point to note is that there is no Grafana Cloud Statsd server to send metrics to. Even if there was, there isn’t much support for authentication and encryption with Statsd either. That’s fine in an on-premise solution or a cluster that you own, but when sending metrics into the cloud, there must be a better option.</p><p>The ideal solution would be a way for me to send Statsd metrics, get them converted to Prometheus and then use the <code class="language-plaintext highlighter-rouge">remote_write</code> functionality that is built-in to Prometheus. This is when I discovered the <a href="https://github.com/prometheus/statsd_exporter">Statsd Prometheus Exporter</a>.</p><h2 id="statsd-to-prometheus">Statsd to Prometheus</h2><p>The exporter is a Statsd server that exports metrics on a <code class="language-plaintext highlighter-rouge">/metrics</code> endpoint. The beauty of this is that all I’d have to do is deploy the exporter to Kubernetes, then change the host that I’m sending metrics to. Bish, bash, bosh!</p><p>Now that’s an easy way to convert from Statsd to Prometheus, but it doesn’t get the best out of either metric type. The beauty of prometheus is the metric name and labelling, but with Statsd there are no labels. If I wanted to add more context to a Statsd metric I need to add it to the key name, which is just not the way to do it with Prometheus.</p><p>Luckily the <a href="https://github.com/prometheus/statsd_exporter">Statsd Prometheus Exporter</a> has <a href="https://github.com/prometheus/statsd_exporter#tagging-extensions">4 awesome tagging/labelling extensions</a> to the Statsd metric protocol which allowed me to also send metrics.</p><h2 id="hybrid-metrics-client">Hybrid metrics client</h2><p>In order to make my own metric implementation easier I created a simple Metrics interface in Golang which I then implemented a “Hybrid” metric type.</p><h3 id="metrics-interface">Metrics interface</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre>package metrics
+
+//ClientInterface ...
+type ClientInterface interface {
+	Init() error
+	Increment(key string, labels map[string]string)
+	IncrementBy(key string, by int, labels map[string]string)
+	Gauge(key string, value int, labels map[string]string)
+}
+</pre></table></code></div></div><h3 id="hybrid-implementation">Hybrid implementation</h3><p>The “Hybrid” type is what I call the Statsd + labels solution. You can see from the interface that I’m only implementing a couple of metric types: Increment and Gauge. Each one takes a key, a value and a string to string map of labels. This is the statsd hybrid implementation:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+</pre><td class="rouge-code"><pre>package metrics
+
+import (
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/alexcesaro/statsd"
+)
+
+// Hybrid metrics
+type Hybrid struct {
+	Statsd       StatsdConfig
+	Client       *statsd.Client
+	AttachLabels bool
+}
+
+// StatsdConfig ...
+type StatsdConfig struct {
+	Host   string
+	Prefix string
+}
+
+// Init ...
+func (m *Hybrid) Init() error {
+	// Set up the statsd client
+	client, err := statsd.New(
+		statsd.Address(m.Statsd.Host),
+		statsd.Prefix(m.Statsd.Prefix),
+		statsd.FlushPeriod(time.Second*1),
+	)
+	if err != nil {
+		return fmt.Errorf("Hybrid: Could not connect to %s: %s", m.Statsd.Host, err.Error())
+	}
+	m.Client = client
+	return nil
+}
+
+// Format key with labels
+func (m *Hybrid) formatKeyWithLabels(key string, labels map[string]string) string {
+	// Do we want to attach labels?
+	if m.AttachLabels == false {
+		return key
+	}
+
+	// Use librato-style tags
+	// metrim.name#tagName=val,tag2Name=val2:0|c
+	// https://github.com/prometheus/statsd_exporter#tagging-extensions
+	if len(key) == 0 {
+		return key
+	}
+	formattedLabels := []string{}
+	for labelKey, labelVal := range labels {
+		formattedLabels = append(formattedLabels, fmt.Sprintf("%s=%s", labelKey, labelVal))
+	}
+	joinedFormattedLabels := strings.TrimSpace(strings.Join(formattedLabels, ","))
+	if joinedFormattedLabels != "" {
+		key = fmt.Sprintf("%s#%s", key, joinedFormattedLabels)
+	}
+
+	return strings.Trim(key, "#")
+}
+
+// Increment ...
+func (m *Hybrid) Increment(key string, labels map[string]string) {
+	m.IncrementBy(key, 1, labels)
+}
+
+// IncrementBy ...
+func (m *Hybrid) IncrementBy(key string, by int, labels map[string]string) {
+	updatedKey := m.formatKeyWithLabels(key, labels)
+	if m.Client != nil {
+		m.Client.Count(updatedKey, by)
+	}
+}
+
+// Gauge ...
+func (m *Hybrid) Gauge(key string, value int, labels map[string]string) {
+	updatedKey := m.formatKeyWithLabels(key, labels)
+	if m.Client != nil {
+		m.Client.Gauge(updatedKey, value)
+	}
+}
+</pre></table></code></div></div><h2 id="sending-to-grafana-cloud">Sending to Grafana Cloud</h2><p>Now that I can get the metrics exported to Prometheus I can easily get them sent to Grafana Cloud using my existing Prometheus server running in my Kubernetes cluster.</p><p>All I need to do is add the following into my Prometheus scrape config:</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre>remote_write:
+- url: https://prometheus-us-central1.grafana.net/api/prom/push
+  basic_auth:
+    username: '&lt;my-user-id-here&gt;'
+    password: '&lt;my-auth-token-here&gt;'
+
+</pre></table></code></div></div><h2 id="conclusion">Conclusion</h2><p>My biggest concerns were the 3 that I listed at the top of this post.</p><ol><li><p><strong>Trust</strong>: Do I trust them? So far I have no reason not to trust them. It could be a flaw, but I may just trust too easily!</p><li><p><strong>PII</strong> I went through all my code and removed PII from my metrics and used ID’s instead where I needed, which is only a couple of occasions.</p><li><p><strong>Authentication</strong> By choosing Prometheus as my way of storing and sending/receiving metrics, the built-in <code class="language-plaintext highlighter-rouge">remove_write</code> functionality includes both Authentication (basic auth) and Encryption (SSL).</p></ol><p>With all 3 of my initial concerns alleviated, I’m very happy with the Grafana Cloud solution and the infrastructure savings by not having to host Grafana, statsd, graphite and other related service myself.</p><p>I don’t have an affiliate link, but be sure to <a href="https://grafana.com/signup/cloud/connect-account?plcmt=sub-nav">sign up for an account</a> to get free (but restricted) metrics infrastructure!</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/how-to/'>how-to</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/grafana/" class="post-tag no-text-decoration" >grafana</a> <a href="/tags/prometheus/" class="post-tag no-text-decoration" >prometheus</a> <a href="/tags/statsd/" class="post-tag no-text-decoration" >statsd</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Statsd + Prometheus on Grafana Cloud - Ollie Parsley&url=https://ollieparsley.com/posts/statsd-grafana-cloud/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Statsd + Prometheus on Grafana Cloud - Ollie Parsley&u=https://ollieparsley.com/posts/statsd-grafana-cloud/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=Statsd + Prometheus on Grafana Cloud - Ollie Parsley&url=https://ollieparsley.com/posts/statsd-grafana-cloud/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/statsd-grafana-cloud/">Statsd + Prometheus on Grafana Cloud</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/grafana/">grafana</a> <a class="post-tag" href="/tags/prometheus/">prometheus</a> <a class="post-tag" href="/tags/statsd/">statsd</a> <a class="post-tag" href="/tags/welcome/">welcome</a></div></div></div><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/welcome/"><div class="card-body"> <span class="timeago small" > Dec 23, 2020 <i class="unloaded">2020-12-23T23:10:00+00:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Welcome!</h3><div class="text-muted small"><p> Hey there! Welcome to my website. In 2021 I’ll be filling this out a lot more and bringing you on the journey for both my day job as a Software Engineer Manager and my side-projects as a Software ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/welcome/" class="btn btn-outline-primary"><p>Welcome!</p></a> <span class="btn btn-outline-primary disabled"><p>-</p></span></div></div></div></div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script> <script type="text/javascript"> const imgs = document.querySelectorAll('#post-wrapper img'); const observer = lozad(imgs); observer.observe(); </script><footer class="d-flex w-100 justify-content-center"> <a style="display:none;" rel="me" href="https://mstdn.social/@OllieParsley">Mastodon</a><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://twitter.com/ollieparsley">Ollie Parsley</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy/" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-xl-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/grafana/">grafana</a> <a class="post-tag" href="/tags/prometheus/">prometheus</a> <a class="post-tag" href="/tags/statsd/">statsd</a> <a class="post-tag" href="/tags/welcome/">welcome</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://ollieparsley.com{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"><div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>{categories}</div><div><i class="fa fa-tag fa-fw"></i>{tags}</div></div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>' }); </script>
